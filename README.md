@@ -79,4 +79,4 @@ Mở trình duyệt: `http://<dia-chi-ip-server>:5000`
 
 ---
 
-**Phát triển bởi Đội ngũ Công nghệ - 2024**
+
