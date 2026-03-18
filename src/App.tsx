@@ -2369,9 +2369,20 @@ const SettingsView = ({ users, settings, onUpdateSettings }: { users: User[], se
                 </select>
               </div>
             </div>
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Ngày gửi báo cáo đầu tháng (Từ 1-31)</label>
-              <input type="number" min="1" max="31" value={localSmtp.emailDay} onChange={(e) => setLocalSmtp({ ...localSmtp, emailDay: parseInt(e.target.value) || 1 })} className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all" placeholder="1" />
+            <div className="flex flex-col">
+              <label className="block text-sm font-bold text-slate-700 mb-2">Ngày gửi báo cáo hàng tháng</label>
+              <div className="flex items-center gap-3">
+                <select
+                  value={localSmtp.emailDay}
+                  onChange={(e) => setLocalSmtp({ ...localSmtp, emailDay: parseInt(e.target.value) })}
+                  className="w-20 px-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all text-center"
+                >
+                  {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                    <option key={day} value={day}>{day}</option>
+                  ))}
+                </select>
+                <span className="text-sm text-slate-500 italic">(Vào lúc 08:00 AM hàng tháng)</span>
+              </div>
             </div>
           </div>
           <div className="space-y-4">
