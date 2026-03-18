@@ -1,4 +1,4 @@
-# 🛡️ License Manager - Hệ thống Quản trị License Chuyên nghiệp
+# 🛡️ License Manager - Hệ thống Quản trị License
 
 [![Deployment: Docker](https://img.shields.io/badge/Deployment-Docker-blue?logo=docker&style=flat-package)](https://www.docker.com/) 
 [![Node.js: 20](https://img.shields.io/badge/Node.js-20-green?logo=node.js&style=flat-package)](https://nodejs.org/)
