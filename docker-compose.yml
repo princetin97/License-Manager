@@ -10,5 +10,9 @@ services:
       - TZ=Asia/Ho_Chi_Minh
       - DATABASE_URL=/app/data/license_manager.db
     volumes:
-      - ./data:/app/data
+      - license_data:/app/data
     restart: always
+
+volumes:
+  license_data:
+    driver: local

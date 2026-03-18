@@ -23,7 +23,7 @@ Hệ thống quản trị tập trung các dịch vụ phần mềm, tên miền
 
 ### 1. Yêu cầu hệ thống
 -   **Docker** & **Docker Compose** (Khuyên dùng Docker phiên bản mới nhất).
--   **Port 5000** (hoặc port tùy chỉnh trong `.env`).
+-   **Port 5000** (hoặc port tùy chỉnh trong `docker-compose.yml`).
 
 ### 2. Cài đặt Docker (Nếu chưa có)
 ```bash
@@ -34,16 +34,14 @@ sudo usermod -aG docker $USER
 ```
 
 ### 3. Triển khai ứng dụng
-Tải mã nguồn về thư mục dự án và thực hiện:
+Tải toàn bộ mã nguồn về máy chủ Ubuntu, truy cập thư mục dự án và chạy duy nhất lệnh sau:
 
 ```bash
-# Tạo thư mục dữ liệu và gán quyền
-mkdir -p data
-sudo chmod -R 777 data
-
-# Khởi chạy bằng Docker Compose
 docker compose up -d --build
 ```
+
+-   Docker sẽ tự động khởi tạo ổ đĩa mang tên `license_data` để lưu trữ file SQLite bền vững.
+-   Lưu ý: Ứng dụng đã được cấu hình chạy bằng quyền **root** để tránh hoàn toàn các lỗi phân quyền ghi file trên Ubuntu.
 
 ### 4. Truy cập
 Mở trình duyệt: `http://<dia-chi-ip-server>:5000`
@@ -54,39 +52,30 @@ Mở trình duyệt: `http://<dia-chi-ip-server>:5000`
 
 ## ⚙️ Cấu hình Gửi Email (SMTP)
 
-Để kích hoạt tính năng thông báo tự động:
+Để kích hoạt tính năng thông báo tự động hàng tháng:
 1. Đăng nhập vào hệ thống dưới quyền Admin.
 2. Truy cập tab **Cài đặt**.
 3. Điền thông tin máy chủ Mail (VD: Gmail App Password, MISA Mail SMTP...).
-4. Nhấn **Gửi thử Mail** để kiểm tra giao diện và kết nối.
-5. Nhấn **Lưu áp dụng** để kích hoạt lịch gửi tự động hàng tháng.
+4. Nhấn **Gửi thử Mail** để kiểm tra giao diện và kết nối thực tế.
+5. Nhấn **Lưu áp dụng** để kích hoạt lịch quét và gửi tự động.
 
 ---
 
-## 📂 Cấu trúc thư mục
-
--   `server.ts`: Module Backend (Express.js, Socket.io, Cron Job).
--   `src/`: Toàn bộ mã nguồn Frontend (React + Vite).
--   `data/`: Thư mục lưu trữ tệp tin SQLite `license_manager.db` (Dữ liệu bền vững).
--   `docker-compose.yml`: Cấu hình container và biến môi trường.
-
----
-
-## 🛠️ Quản lý & Bảo trì
+## 🛠️ Quản trị & Sao lưu
 
 -   **Xem logs**: `docker compose logs -f`
 -   **Dừng hệ thống**: `docker compose down`
--   **Cập nhật mã nguồn mới**:
+-   **Sao lưu cơ sở dữ liệu**:
+    Dữ liệu được lưu trong Docker volume mang tên `license_data`. Để tìm thư mục vật lý chứa file trên Ubuntu, bạn dùng lệnh:
     ```bash
-    git pull
-    docker compose up -d --build
+    docker volume inspect license-manager_license_data
     ```
 
 ---
 
 ## 🔒 Security Note
 -   Khuyến cáo đổi mật khẩu Admin ngay sau khi đăng nhập lần đầu.
--   Thư mục `data/` trong cấu hình đã được `.gitignore` để tránh đẩy dữ liệu nhạy cảm lên GitHub.
+-   Các tệp tin `.db` đã được cấu hình trong `.gitignore` để không bị đẩy lên GitHub/Version Control công cộng.
 
 ---
 
