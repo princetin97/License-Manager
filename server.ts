@@ -506,13 +506,17 @@ async function startServer() {
     let html = "<h2>[Tự động] Danh sách License sắp hết hạn (Trong 3 tháng tới)</h2>";
     html += "<p>Hệ thống tự động thông báo các dịch vụ, phần mềm, domain sắp hết hạn trong 3 tháng tới cần được ưu tiên xem xét gia hạn:</p>";
     html += "<table border='1' cellpadding='10' cellspacing='0' style='border-collapse: collapse; width: 100%; border-color: #e2e8f0; font-family: sans-serif;'>";
-    html += "<tr style='background-color: #f1f5f9; font-weight: bold;'><th>Tên dịch vụ</th><th>Phân loại</th><th>Ngày hết hạn</th><th>Mã bộ phận</th><th>Người dùng/Hợp đồng</th></tr>";
+    html += "<tr style='background-color: #f1f5f9; font-weight: bold;'><th>Tên dịch vụ</th><th>Phân loại</th><th>Ngày hết hạn</th><th>Còn lại</th><th>Mã bộ phận</th><th>Mã kênh/Serial</th></tr>";
 
     for (const l of expiringLicenses) {
+      const remainingDays = Math.ceil((new Date(l.expiry_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+      const remainingText = remainingDays > 0 ? `${remainingDays} ngày` : 'Hôm nay';
+
       html += `<tr>
         <td><b>${l.name}</b></td>
         <td>${l.category || ''}</td>
         <td><b style='color: #dc2626;'>${l.expiry_date}</b></td>
+        <td><span style='background-color: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 4px; font-weight: bold;'>${remainingText}</span></td>
         <td>${l.department || ''}</td>
         <td>${l.contract_code || l.serial_number || ''}</td>
       </tr>`;
@@ -526,8 +530,8 @@ async function startServer() {
     let expiringLicenses = db.prepare(`
       SELECT * FROM licenses 
       WHERE deleted_at IS NULL 
-      AND expiry_date >= date('now')
-      AND expiry_date <= date('now', '+3 months')
+      AND expiry_date >= date('now', 'localtime')
+      AND expiry_date <= date('now', 'localtime', '+100 days')
       ORDER BY expiry_date ASC
       LIMIT 10
     `).all();
@@ -563,8 +567,8 @@ async function startServer() {
       const expiringLicenses = db.prepare(`
         SELECT * FROM licenses 
         WHERE deleted_at IS NULL 
-        AND expiry_date >= date('now')
-        AND expiry_date <= date('now', '+3 months')
+        AND expiry_date >= date('now', 'localtime')
+        AND expiry_date <= date('now', 'localtime', '+100 days')
         ORDER BY expiry_date ASC
       `).all();
 
